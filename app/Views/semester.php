@@ -8,9 +8,6 @@
 <link
     rel="stylesheet"
     href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css" />
-<link
-    rel="stylesheet"
-    href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css" />
 <?= $this->endSection('style'); ?>
 
 <?= $this->section('content') ?>
@@ -46,9 +43,9 @@
                                 <?php foreach ($semester as $key => $value) { ?>
                                     <tr>
                                         <td><?= $key + 1; ?></td>
-                                        <td><?= $value['semester_name']; ?></td>
-                                        <td><?= $value['created_at']; ?></td>
-                                        <td><?= $value['updated_at'] ?? "-"; ?></td>
+                                        <td><?= esc(trim($value['semester_name'] ?? '')) ?></td>
+                                        <td><?= esc(trim($value['created_at'] ?? '-')) ?></td>
+                                        <td><?= esc(trim($value['updated_at'] ?? '-')) ?></td>
                                         <td>
                                             <button class="btn btn-warning btnEditSemester"
                                                 data-id="<?= $value['id']; ?>"
@@ -121,6 +118,21 @@
                 responsive: true,
                 lengthChange: false,
                 autoWidth: false,
+                pageLength: 5,
+                columnDefs: [{
+                        targets: 1,
+                        searchable: true
+                    },
+                    {
+                        targets: '_all',
+                        searchable: false
+                    },
+                    {
+                        targets: 4,
+                        orderable: false,
+                        className: 'text-center'
+                    }
+                ]
             })
     });
 
