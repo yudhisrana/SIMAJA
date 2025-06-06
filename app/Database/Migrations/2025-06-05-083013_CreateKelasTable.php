@@ -34,7 +34,7 @@ class CreateKelasTable extends Migration
             ],
             'created_at' => [
                 'type' => 'DATETIME',
-                'null' => false
+                'null' => false,
             ],
             'updated_at' => [
                 'type' => 'DATETIME',

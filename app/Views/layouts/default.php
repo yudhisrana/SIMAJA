@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="/assets/css/adminlte.min.css">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Additional Style -->
+    <?= $this->renderSection('style'); ?>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
@@ -70,6 +72,8 @@
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="/assets/js/adminlte.js"></script>
+    <!-- Additional Script -->
+    <?= $this->renderSection('script'); ?>
 </body>
 
 </html>

@@ -18,6 +18,14 @@ class CreateTahunAjaranTable extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => 15,
             ],
+            'created_at' => [
+                'type'    => 'DATETIME',
+                'null'    => false,
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+                'null' => true
+            ],
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('tbl_tahun_ajaran');

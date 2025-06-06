@@ -2,12 +2,14 @@
 
 namespace App\Database\Seeds;
 
+use App\Models\Semester;
 use CodeIgniter\Database\Seeder;
 
 class SemesterSeeder extends Seeder
 {
     public function run()
     {
+        $semesterModel = new Semester();
         $data = [
             ['semester_name' => 'Semester 1'],
             ['semester_name' => 'Semester 2'],
@@ -21,6 +23,8 @@ class SemesterSeeder extends Seeder
             ['semester_name' => 'Semester 10'],
         ];
 
-        $this->db->table('tbl_semester')->insertBatch($data);
+        foreach ($data as $items) {
+            $semesterModel->insert($items);
+        }
     }
 }
