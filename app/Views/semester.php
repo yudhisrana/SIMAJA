@@ -8,6 +8,11 @@
 <link
     rel="stylesheet"
     href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css" />
+
+<!-- SweetAlert2 -->
+<link
+    rel="stylesheet"
+    href="/plugins/sweetalert2/sweetalert2.min.css" />
 <?= $this->endSection('style'); ?>
 
 <?= $this->section('content') ?>
@@ -82,7 +87,8 @@
                 <form id="formSemester">
                     <div class="form-group">
                         <label for="namaSemester">Nama Semester</label>
-                        <input type="text" class="form-control" id="namaSemester" name="semester_name" placeholder="Semester 1 / Semester 2 dst">
+                        <input type="text" name="nama_semester" class="form-control" id="namaSemester" placeholder="Semester 1 / Semester 2 dst" aria-describedby="namaSemester-error">
+                        <span id="namaSemester-error" class="error invalid-feedback" style="display: none;"></span>
                     </div>
                 </form>
 
@@ -110,6 +116,8 @@
 <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
 <script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
 <script>
     // datatable
     $(function() {
@@ -147,14 +155,19 @@
 
     $(function() {
         let modeModal = '';
+        const baseUrl = 'http://localhost:8080/'
+        let url = '';
+        let method = '';
 
         // function reset
         function reset() {
             $('#formSemester')[0].reset();
-            $('#formSemester').removeClass('d-none')
+            $('#formSemester').removeClass('d-none');
             $('#displayConfirmation').addClass('d-none');
-            $('#cancelModal').removeClass('btn-secondary').addClass('btn-danger')
-            $('#btnSubmitSemester').removeClass('btn-danger').addClass('btn-primary')
+            $('#cancelModal').removeClass('btn-secondary').addClass('btn-danger');
+            $('#btnSubmitSemester').removeClass('btn-danger').addClass('btn-primary');
+            $('#namaSemester').removeClass('is-invalid');
+            $('#namaSemester-error').text('').hide();
         }
 
         // modal tambah
@@ -191,6 +204,51 @@
             $('#modalSemester').modal('show');
         });
 
+        // tambah dan update
+        $('#formSemester').submit(function(e) {
+            e.preventDefault();
+            const data = $(this).serialize();
+
+            if (modeModal === 'tambah') {
+                url = baseUrl + 'semester/create-data'
+                method = 'POST'
+            } else {
+                url = baseUrl + 'semester/create-data'
+                method = 'PUT'
+            }
+
+            $.ajax({
+                url: url,
+                method: method,
+                data: data,
+                success: function(res) {
+                    if (res.success) {
+                        Swal.fire({
+                            title: "Sukses",
+                            text: res.message,
+                            icon: "success"
+                        }).then((result) => {
+                            location.reload();
+                        });
+                    } else {
+                        if (res.errors && res.errors.nama_semester) {
+                            $('#namaSemester').addClass('is-invalid');
+                            $('#namaSemester-error').text(res.errors.nama_semester).show();
+                        }
+                    }
+                }
+            })
+        });
+
+        // hapus data
+        $('#btnSubmitSemester').click(function() {
+            if (modeModal === 'delete') {
+                //
+            } else {
+                $('#formSemester').submit();
+            }
+        });
+
         // focus input saat modal selesai ditampilkan
         $('#modalSemester').on('shown.bs.modal', function() {
             if (modeModal === 'tambah') {
@@ -200,6 +258,7 @@
 
         // reset batal
         $('#cancelModal').click(function() {
+            document.activeElement.blur();
             reset();
         });
     });

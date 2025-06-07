@@ -19,3 +19,4 @@ $routes->get('/dashboard', [Dashboard::class, 'index']);
 
 // Route Semester
 $routes->get('/semester', [Semester::class, 'index']);
+$routes->post('/semester/create-data', [Semester::class, 'store']);
