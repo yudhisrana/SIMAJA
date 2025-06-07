@@ -20,3 +20,5 @@ $routes->get('/dashboard', [Dashboard::class, 'index']);
 // Route Semester
 $routes->get('/semester', [Semester::class, 'index']);
 $routes->post('/semester/create-data', [Semester::class, 'store']);
+$routes->post('/semester/update-data/(:num)', [Semester::class, 'update']);
+$routes->post('/semester/delete-data/(:num)', [Semester::class, 'destroy']);

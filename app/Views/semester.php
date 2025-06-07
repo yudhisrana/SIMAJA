@@ -54,12 +54,11 @@
                                         <td>
                                             <button class="btn btn-warning btnEditSemester"
                                                 data-id="<?= $value['id']; ?>"
-                                                data-semester="<?= htmlspecialchars($value['semester_name'], ENT_QUOTES) ?>">
+                                                data-semester="<?= htmlspecialchars(trim($value['semester_name']), ENT_QUOTES) ?>">
                                                 <i class="far fa-edit"></i>
                                             </button>
                                             <button class="btn btn-danger btnDeleteSemester"
-                                                data-id="<?= $value['id']; ?>"
-                                                data-semester="<?= htmlspecialchars($value['semester_name'], ENT_QUOTES) ?>">
+                                                data-id="<?= $value['id']; ?>">
                                                 <i class="far fa-trash-alt"></i>
                                             </button>
                                         </td>
@@ -90,177 +89,194 @@
                         <input type="text" name="nama_semester" class="form-control" id="namaSemester" placeholder="Semester 1 / Semester 2 dst" aria-describedby="namaSemester-error">
                         <span id="namaSemester-error" class="error invalid-feedback" style="display: none;"></span>
                     </div>
-                </form>
-
-                <!-- confirm delete -->
-                <div id="displayConfirmation" class="d-none">
-                    <div class="d-flex flex-column justify-content-center align-items-center mt-2">
-                        <h5><b>Yakin hapus data ini?</b></h5>
-                        <p>data yang dihapus tidak dapat dikembalikan</p>
+                    <div class="d-flex justify-content-end align-items-center">
+                        <button id="cancelModal" type="button" class="btn btn-danger mr-2" data-dismiss="modal">Batal</button>
+                        <button id="btnSubmitSemester" type="submit" class="btn btn-primary">-</button>
                     </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="cancelModal" type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
-                <button id="btnSubmitSemester" type="button" class="btn btn-primary">-</button>
+                </form>
             </div>
         </div>
     </div>
-</div>
-<?= $this->endSection('content') ?>
+    <?= $this->endSection('content') ?>
 
-<?= $this->section('script'); ?>
-<!-- DataTables -->
-<!-- DataTables  & Plugins -->
-<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-<script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<!-- SweetAlert2 -->
-<script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
-<script>
-    // datatable
-    $(function() {
-        $("#dataSemester")
-            .DataTable({
-                responsive: true,
-                lengthChange: false,
-                autoWidth: false,
-                pageLength: 5,
-                columnDefs: [{
-                        targets: 0,
-                        searchable: false,
-                        width: '25px'
-                    },
-                    {
-                        targets: 1,
-                        searchable: true,
-                    },
-                    {
-                        targets: 2,
-                        searchable: false,
-                    },
-                    {
-                        targets: 3,
-                        searchable: false,
-                    },
-                    {
-                        targets: 4,
-                        orderable: false,
-                        className: 'text-center'
-                    }
-                ]
-            })
-    });
-
-    $(function() {
-        let modeModal = '';
-        const baseUrl = 'http://localhost:8080/'
-        let url = '';
-        let method = '';
-
-        // function reset
-        function reset() {
-            $('#formSemester')[0].reset();
-            $('#formSemester').removeClass('d-none');
-            $('#displayConfirmation').addClass('d-none');
-            $('#cancelModal').removeClass('btn-secondary').addClass('btn-danger');
-            $('#btnSubmitSemester').removeClass('btn-danger').addClass('btn-primary');
-            $('#namaSemester').removeClass('is-invalid');
-            $('#namaSemester-error').text('').hide();
-        }
-
-        // modal tambah
-        $('.btnTambahSemester').click(function() {
-            modeModal = 'tambah';
-
-            $('#modalSemesterLabel').text('Tambah Data');
-            $('#btnSubmitSemester').text('Simpan');
-            $('#modalSemester').modal('show');
-        });
-
-        // modal edit
-        $('.btnEditSemester').click(function() {
-            const semester = $(this).data('semester')
-            modeModal = 'edit';
-
-            $('#modalSemesterLabel').text('Edit Data');
-            $('#btnSubmitSemester').text('Update');
-            $('#namaSemester').val(semester)
-            $('#modalSemester').modal('show');
-        });
-
-        // modal delete
-        $('.btnDeleteSemester').click(function() {
-            const semester = $(this).data('semester')
-            modeModal = 'delete';
-
-            $('#modalSemesterLabel').text('Delete Data');
-            $('#btnSubmitSemester').text('Hapus');
-            $('#formSemester').addClass('d-none')
-            $('#displayConfirmation').removeClass('d-none');
-            $('#cancelModal').removeClass('btn-danger').addClass('btn-secondary')
-            $('#btnSubmitSemester').removeClass('btn-primary').addClass('btn-danger')
-            $('#modalSemester').modal('show');
-        });
-
-        // tambah dan update
-        $('#formSemester').submit(function(e) {
-            e.preventDefault();
-            const data = $(this).serialize();
-
-            if (modeModal === 'tambah') {
-                url = baseUrl + 'semester/create-data'
-                method = 'POST'
-            } else {
-                url = baseUrl + 'semester/create-data'
-                method = 'PUT'
-            }
-
-            $.ajax({
-                url: url,
-                method: method,
-                data: data,
-                success: function(res) {
-                    if (res.success) {
-                        Swal.fire({
-                            title: "Sukses",
-                            text: res.message,
-                            icon: "success"
-                        }).then((result) => {
-                            location.reload();
-                        });
-                    } else {
-                        if (res.errors && res.errors.nama_semester) {
-                            $('#namaSemester').addClass('is-invalid');
-                            $('#namaSemester-error').text(res.errors.nama_semester).show();
+    <?= $this->section('script'); ?>
+    <!-- DataTables -->
+    <!-- DataTables  & Plugins -->
+    <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script>
+        // datatable
+        $(function() {
+            $("#dataSemester")
+                .DataTable({
+                    responsive: true,
+                    lengthChange: false,
+                    autoWidth: false,
+                    pageLength: 5,
+                    columnDefs: [{
+                            targets: 0,
+                            searchable: false,
+                            width: '25px'
+                        },
+                        {
+                            targets: 1,
+                            searchable: true,
+                        },
+                        {
+                            targets: 2,
+                            searchable: false,
+                        },
+                        {
+                            targets: 3,
+                            searchable: false,
+                        },
+                        {
+                            targets: 4,
+                            orderable: false,
+                            className: 'text-center'
                         }
+                    ]
+                })
+        });
+
+        $(function() {
+            let modeModal = '';
+            const baseUrl = 'http://localhost:8080/'
+            let url = '';
+            let method = '';
+
+            // function reset
+            function reset() {
+                $('#formSemester')[0].reset();
+                $('#namaSemester').removeClass('is-invalid');
+                $('#namaSemester-error').text('').hide();
+            }
+
+            // modal tambah
+            $('.btnTambahSemester').click(function() {
+                modeModal = 'tambah';
+                url = 'semester/create-data';
+                method = 'POST';
+
+                $('#modalSemesterLabel').text('Tambah Data');
+                $('#btnSubmitSemester').text('Simpan');
+                $('#modalSemester').modal('show');
+            });
+
+            // modal edit
+            $('.btnEditSemester').click(function() {
+                const id = $(this).data('id')
+                const semester = $(this).data('semester')
+                modeModal = 'edit';
+                url = 'semester/update-data/' + id;
+                method = 'POST';
+
+                $('#modalSemesterLabel').text('Edit Data');
+                $('#btnSubmitSemester').text('Update');
+                $('#namaSemester').val(semester)
+                $('#modalSemester').modal('show');
+            });
+
+            // tambah dan update
+            $('#formSemester').submit(function(e) {
+                e.preventDefault();
+                const data = $(this).serialize();
+
+                $.ajax({
+                    url: url,
+                    method: method,
+                    data: data,
+                    success: function(res) {
+                        if (res.success) {
+                            Swal.fire({
+                                title: "Sukses",
+                                text: res.message,
+                                icon: "success"
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            if (res.errors && res.errors.nama_semester) {
+                                $('#namaSemester').addClass('is-invalid');
+                                $('#namaSemester-error').text(res.errors.nama_semester).show();
+                            }
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            title: 'Opsss..',
+                            text: 'Terjadi kesalahan server, silahkan coba lagi!',
+                            icon: "error"
+                        })
                     }
+                })
+            });
+
+            // modal delete
+            $('.btnDeleteSemester').click(function() {
+                const id = $(this).data('id')
+                url = baseUrl + 'semester/delete-data/' + id;
+                method = 'POST';
+
+                Swal.fire({
+                    title: "Yakin hapus data?",
+                    text: "Data yang dihapus tidak dapat dikembalikan!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#C82333",
+                    confirmButtonText: "Ya, hapus!",
+                    cancelButtonColor: "#5A6268",
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            method: method,
+                            success: function(res) {
+                                if (res.success) {
+                                    Swal.fire({
+                                        title: "Dihapus",
+                                        text: res.message,
+                                        icon: "success"
+                                    }).then(() => {
+                                        location.reload();
+                                    })
+                                } else {
+                                    Swal.fire({
+                                        title: 'Opsss..',
+                                        text: 'Gagal menghapus data semester',
+                                        icon: "error"
+                                    })
+                                }
+                            },
+                            error: function() {
+                                Swal.fire({
+                                    title: 'Opsss..',
+                                    text: 'Terjadi kesalahan server, silahkan coba lagi!',
+                                    icon: "error"
+                                })
+                            }
+                        })
+                    }
+                });
+            });
+
+            // focus input saat modal selesai ditampilkan
+            $('#modalSemester').on('shown.bs.modal', function() {
+                if (modeModal === 'tambah') {
+                    $('#namaSemester').trigger('focus');
                 }
-            })
-        });
+            });
 
-        // hapus data
-        $('#btnSubmitSemester').click(function() {
-            if (modeModal === 'delete') {
-                //
-            } else {
-                $('#formSemester').submit();
-            }
+            // reset batal
+            $('#cancelModal').click(function() {
+                document.activeElement.blur();
+                reset();
+            });
         });
-
-        // focus input saat modal selesai ditampilkan
-        $('#modalSemester').on('shown.bs.modal', function() {
-            if (modeModal === 'tambah') {
-                $('#namaSemester').trigger('focus');
-            }
-        });
-
-        // reset batal
-        $('#cancelModal').click(function() {
-            document.activeElement.blur();
-            reset();
-        });
-    });
-</script>
-<?= $this->endSection('script'); ?>
+    </script>
+    <?= $this->endSection('script'); ?>
