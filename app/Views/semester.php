@@ -120,12 +120,21 @@
                 autoWidth: false,
                 pageLength: 5,
                 columnDefs: [{
-                        targets: 1,
-                        searchable: true
+                        targets: 0,
+                        searchable: false,
+                        width: '25px'
                     },
                     {
-                        targets: '_all',
-                        searchable: false
+                        targets: 1,
+                        searchable: true,
+                    },
+                    {
+                        targets: 2,
+                        searchable: false,
+                    },
+                    {
+                        targets: 3,
+                        searchable: false,
                     },
                     {
                         targets: 4,
