@@ -32,7 +32,7 @@
                 <li class="nav-header">MASTER DATA</li>
                 <li class="nav-item">
                     <a href="/semester" class="nav-link">
-                        <i class="nav-icon fas fa-id-card"></i>
+                        <i class="nav-icon fas fa-door-open"></i>
                         <p>
                             Kelas
                         </p>
@@ -40,15 +40,15 @@
                 </li>
                 <li class="nav-item">
                     <a href="/semester" class="nav-link">
-                        <i class="nav-icon fas fa-id-card"></i>
+                        <i class="nav-icon fas fa-sort-numeric-up-alt"></i>
                         <p>
                             Semester
                         </p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/semester" class="nav-link">
-                        <i class="nav-icon fas fa-id-card"></i>
+                    <a href="/tahun-ajaran" class="nav-link">
+                        <i class="nav-icon fas fa-layer-group"></i>
                         <p>
                             Tahun Ajaran
                         </p>

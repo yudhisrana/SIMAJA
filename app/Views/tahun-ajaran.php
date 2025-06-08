@@ -25,7 +25,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <h3 class="card-title">Data <?= $page_name ?></h3>
-                            <button class="btn btn-primary btnTambahSemester">
+                            <button class="btn btn-primary btnTambahTahunAjaran">
                                 <i class="fas fa-plus mr-1"></i>
                                 <span>Tambah Data</span>
                             </button>
@@ -33,31 +33,31 @@
                     </div>
                     <div class="card-body">
                         <table
-                            id="dataSemester"
+                            id="dataTahunAjaran"
                             class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Semester</th>
+                                    <th>Tahun Ajaran</th>
                                     <th>Tanggal Dibuat</th>
                                     <th>Tanggal Diupdate</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($semester as $key => $value) { ?>
+                                <?php foreach ($tahun_ajaran as $key => $value) { ?>
                                     <tr>
                                         <td><?= $key + 1; ?></td>
-                                        <td><?= esc(trim($value['semester_name'] ?? '')) ?></td>
+                                        <td><?= esc(trim($value['tahun'] ?? '')) ?></td>
                                         <td><?= esc(trim($value['created_at'] ?? '-')) ?></td>
                                         <td><?= esc(trim($value['updated_at'] ?? '-')) ?></td>
                                         <td>
-                                            <button class="btn btn-warning btnEditSemester"
+                                            <button class="btn btn-warning btnEditTahunAjaran"
                                                 data-id="<?= $value['id']; ?>"
-                                                data-semester="<?= htmlspecialchars(trim($value['semester_name']), ENT_QUOTES) ?>">
+                                                data-tahun_ajaran="<?= htmlspecialchars(trim($value['tahun']), ENT_QUOTES) ?>">
                                                 <i class="far fa-edit"></i>
                                             </button>
-                                            <button class="btn btn-danger btnDeleteSemester"
+                                            <button class="btn btn-danger btnDeleteTahunAjaran"
                                                 data-id="<?= $value['id']; ?>">
                                                 <i class="far fa-trash-alt"></i>
                                             </button>
@@ -75,23 +75,23 @@
 </section>
 
 <!-- Modal -->
-<div class="modal fade" id="modalSemester" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modalSemesterLabel" aria-hidden="true">
+<div class="modal fade" id="modalTahunAjaran" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modalTahunAjaranLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalSemesterLabel">-</h5>
+                <h5 class="modal-title" id="modalTahunAjaranLabel">-</h5>
             </div>
             <div class="modal-body">
                 <!-- form -->
-                <form id="formSemester">
+                <form id="formTahunAjaran">
                     <div class="form-group">
-                        <label for="namaSemester">Nama Semester</label>
-                        <input type="text" name="nama_semester" class="form-control" id="namaSemester" placeholder="Semester 1 / Semester 2 dst" aria-describedby="namaSemester-error">
-                        <span id="namaSemester-error" class="error invalid-feedback" style="display: none;"></span>
+                        <label for="namaTahunAjaran">Tahun Ajaran</label>
+                        <input type="text" name="tahun_ajaran" class="form-control" id="namaTahunAjaran" placeholder="2025/2026" aria-describedby="namaTahunAjaran-error">
+                        <span id="namaTahunAjaran-error" class="error invalid-feedback" style="display: none;"></span>
                     </div>
                     <div class="d-flex justify-content-end align-items-center">
                         <button id="cancelModal" type="button" class="btn btn-danger mr-2" data-dismiss="modal">Batal</button>
-                        <button id="btnSubmitSemester" type="submit" class="btn btn-primary">-</button>
+                        <button id="btnSubmitTahunAjaran" type="submit" class="btn btn-primary">-</button>
                     </div>
                 </form>
             </div>
@@ -112,7 +112,7 @@
 <script>
     // datatable
     $(function() {
-        $("#dataSemester")
+        $("#dataTahunAjaran")
             .DataTable({
                 responsive: true,
                 lengthChange: false,
@@ -147,38 +147,38 @@
     $(function() {
         // function reset
         function reset() {
-            $('#formSemester')[0].reset();
-            $('#namaSemester').removeClass('is-invalid');
-            $('#namaSemester-error').text('').hide();
+            $('#formTahunAjaran')[0].reset();
+            $('#namaTahunAjaran').removeClass('is-invalid');
+            $('#namaTahunAjaran-error').text('').hide();
         }
 
         // modal tambah
-        $('.btnTambahSemester').click(function() {
+        $('.btnTambahTahunAjaran').click(function() {
             modeModal = 'tambah';
-            url = 'semester/create-data';
+            url = 'tahun-ajaran/create-data';
             method = 'POST';
 
-            $('#modalSemesterLabel').text('Tambah Data');
-            $('#btnSubmitSemester').text('Simpan');
-            $('#modalSemester').modal('show');
+            $('#modalTahunAjaranLabel').text('Tambah Data');
+            $('#btnSubmitTahunAjaran').text('Simpan');
+            $('#modalTahunAjaran').modal('show');
         });
 
         // modal edit
-        $('.btnEditSemester').click(function() {
+        $('.btnEditTahunAjaran').click(function() {
             const id = $(this).data('id')
-            const semester = $(this).data('semester')
+            const tahunAjaran = $(this).data('tahun_ajaran')
             modeModal = 'edit';
-            url = 'semester/update-data/' + id;
+            url = 'tahun-ajaran/update-data/' + id;
             method = 'POST';
 
-            $('#modalSemesterLabel').text('Edit Data');
-            $('#btnSubmitSemester').text('Update');
-            $('#namaSemester').val(semester)
-            $('#modalSemester').modal('show');
+            $('#modalTahunAjaranLabel').text('Edit Data');
+            $('#btnSubmitTahunAjaran').text('Update');
+            $('#namaTahunAjaran').val(tahunAjaran)
+            $('#modalTahunAjaran').modal('show');
         });
 
         // tambah dan update
-        $('#formSemester').submit(function(e) {
+        $('#formTahunAjaran').submit(function(e) {
             e.preventDefault();
             const data = $(this).serialize();
 
@@ -196,9 +196,9 @@
                             location.reload();
                         });
                     } else {
-                        if (res.errors && res.errors.nama_semester) {
-                            $('#namaSemester').addClass('is-invalid');
-                            $('#namaSemester-error').text(res.errors.nama_semester).show();
+                        if (res.errors && res.errors.tahun_ajaran) {
+                            $('#namaTahunAjaran').addClass('is-invalid');
+                            $('#namaTahunAjaran-error').text(res.errors.tahun_ajaran).show();
                         }
                     }
                 },
@@ -213,9 +213,9 @@
         });
 
         // modal delete
-        $('.btnDeleteSemester').click(function() {
+        $('.btnDeleteTahunAjaran').click(function() {
             const id = $(this).data('id')
-            url = baseUrl + 'semester/delete-data/' + id;
+            url = baseUrl + 'tahun-ajaran/delete-data/' + id;
             method = 'POST';
 
             Swal.fire({
@@ -244,7 +244,7 @@
                             } else {
                                 Swal.fire({
                                     title: 'Opsss..',
-                                    text: 'Gagal menghapus data semester',
+                                    text: 'Gagal menghapus data tahunajaran',
                                     icon: "error"
                                 })
                             }
@@ -262,9 +262,9 @@
         });
 
         // focus input saat modal selesai ditampilkan
-        $('#modalSemester').on('shown.bs.modal', function() {
+        $('#modalTahunAjaran').on('shown.bs.modal', function() {
             if (modeModal === 'tambah') {
-                $('#namaSemester').trigger('focus');
+                $('#namaTahunAjaran').trigger('focus');
             }
         });
 

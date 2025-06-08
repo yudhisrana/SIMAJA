@@ -20,6 +20,12 @@
     <link rel="stylesheet" href="/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- Additional Style -->
     <?= $this->renderSection('style'); ?>
+    <script>
+        const baseUrl = 'http://localhost:8080/'
+        let modeModal = '';
+        let url = '';
+        let method = '';
+    </script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
