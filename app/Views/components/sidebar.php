@@ -31,7 +31,7 @@
 
                 <li class="nav-header">MASTER DATA</li>
                 <li class="nav-item">
-                    <a href="/semester" class="nav-link">
+                    <a href="/kelas" class="nav-link">
                         <i class="nav-icon fas fa-door-open"></i>
                         <p>
                             Kelas

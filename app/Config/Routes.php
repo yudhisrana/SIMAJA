@@ -3,6 +3,7 @@
 use App\Controllers\Auth;
 use App\Controllers\Dashboard;
 use App\Controllers\Home;
+use App\Controllers\Kelas;
 use App\Controllers\Semester;
 use App\Controllers\TahunAjaran;
 use CodeIgniter\Router\RouteCollection;
@@ -29,3 +30,9 @@ $routes->get('/tahun-ajaran', [TahunAjaran::class, 'index']);
 $routes->post('/tahun-ajaran/create-data', [TahunAjaran::class, 'store']);
 $routes->post('/tahun-ajaran/update-data/(:num)', [TahunAjaran::class, 'update']);
 $routes->post('/tahun-ajaran/delete-data/(:num)', [TahunAjaran::class, 'destroy']);
+
+// Route Kelas
+$routes->get('/kelas', [Kelas::class, 'index']);
+$routes->post('/kelas/create-data', [Kelas::class, 'store']);
+$routes->post('/kelas/update-data/(:hash)', [Kelas::class, 'update']);
+$routes->post('/kelas/delete-data/(:hash)', [Kelas::class, 'destroy']);
