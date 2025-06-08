@@ -54,12 +54,16 @@
                                         <td><?= esc(trim($value->kelas_name ?? '')); ?></td>
                                         <td><?= esc(trim($value->semesterName ?? '')); ?></td>
                                         <td><?= esc(trim($value->tahunAjaran ?? '')); ?></td>
-                                        <td><?= esc(trim($value->created_at ?? '-')); ?></td>
-                                        <td><?= esc(trim($value->updated_at ?? '-')); ?></td>
+                                        <td>
+                                            <?= $value->created_at ? date('d-m-Y H:i:s', strtotime($value->created_at)) : '-' ?>
+                                        </td>
+                                        <td>
+                                            <?= $value->updated_at ? date('d-m-Y H:i:s', strtotime($value->updated_at)) : '-' ?>
+                                        </td>
                                         <td>
                                             <?= $value->is_active
                                                 ? '<span class="badge badge-pill badge-success">Aktif</span>'
-                                                : '<span class="badge badge-pill badge-secondary">Nonaktif</span>'
+                                                : '<span class="badge badge-pill badge-danger">Nonaktif</span>'
                                             ?>
                                         </td>
                                         <td>
@@ -98,6 +102,7 @@
             <div class="modal-body">
                 <!-- form -->
                 <form id="formKelas">
+                    <?= csrf_field(); ?>
                     <div class="form-group">
                         <label for="kelas">Nama Kelas</label>
                         <input type="text" name="kelas" class="form-control" id="kelas" placeholder="Nama Kelas" aria-describedby="kelas-error">
@@ -168,15 +173,15 @@
                     },
                     {
                         targets: 2,
-                        searchable: false,
+                        searchable: true,
                     },
                     {
                         targets: 3,
-                        searchable: false,
+                        searchable: true,
                     },
                     {
                         targets: 4,
-                        searchable: false,
+                        searchable: true,
                     },
                     {
                         targets: 5,
@@ -285,6 +290,8 @@
 
         // modal delete
         $('.btnDeleteKelas').click(function() {
+            const csrfName = $('input[name]').attr('name');
+            const csrfHash = $('input[name]').val();
             const id = $(this).data('id')
             url = baseUrl + 'kelas/delete-data/' + id;
             method = 'POST';
@@ -303,6 +310,9 @@
                     $.ajax({
                         url: url,
                         method: method,
+                        data: {
+                            [csrfName]: csrfHash,
+                        },
                         success: function(res) {
                             if (res.success) {
                                 Swal.fire({

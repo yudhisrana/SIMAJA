@@ -49,8 +49,12 @@
                                     <tr>
                                         <td><?= $key + 1; ?></td>
                                         <td><?= esc(trim($value['tahun'] ?? '')) ?></td>
-                                        <td><?= esc(trim($value['created_at'] ?? '-')) ?></td>
-                                        <td><?= esc(trim($value['updated_at'] ?? '-')) ?></td>
+                                        <td>
+                                            <?= $value['created_at'] ? date('d-m-Y H:i:s', strtotime($value['created_at'])) : '-' ?>
+                                        </td>
+                                        <td>
+                                            <?= $value['updated_at'] ? date('d-m-Y H:i:s', strtotime($value['updated_at'])) : '-' ?>
+                                        </td>
                                         <td>
                                             <button class="btn btn-warning btnEditTahunAjaran"
                                                 data-id="<?= $value['id']; ?>"
@@ -84,6 +88,7 @@
             <div class="modal-body">
                 <!-- form -->
                 <form id="formTahunAjaran">
+                    <?= csrf_field(); ?>
                     <div class="form-group">
                         <label for="namaTahunAjaran">Tahun Ajaran</label>
                         <input type="text" name="tahun_ajaran" class="form-control" id="namaTahunAjaran" placeholder="2025/2026" aria-describedby="namaTahunAjaran-error">
@@ -214,6 +219,8 @@
 
         // modal delete
         $('.btnDeleteTahunAjaran').click(function() {
+            const csrfName = $('input[name]').attr('name');
+            const csrfHash = $('input[name]').val();
             const id = $(this).data('id')
             url = baseUrl + 'tahun-ajaran/delete-data/' + id;
             method = 'POST';
@@ -232,6 +239,9 @@
                     $.ajax({
                         url: url,
                         method: method,
+                        data: {
+                            [csrfName]: csrfHash,
+                        },
                         success: function(res) {
                             if (res.success) {
                                 Swal.fire({
