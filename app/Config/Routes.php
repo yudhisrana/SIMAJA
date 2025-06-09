@@ -4,6 +4,7 @@ use App\Controllers\Auth;
 use App\Controllers\Dashboard;
 use App\Controllers\Home;
 use App\Controllers\Kelas;
+use App\Controllers\ProgramStudi;
 use App\Controllers\Semester;
 use App\Controllers\TahunAjaran;
 use CodeIgniter\Router\RouteCollection;
@@ -36,3 +37,9 @@ $routes->get('/kelas', [Kelas::class, 'index']);
 $routes->post('/kelas/create-data', [Kelas::class, 'store']);
 $routes->post('/kelas/update-data/(:hash)', [Kelas::class, 'update']);
 $routes->post('/kelas/delete-data/(:hash)', [Kelas::class, 'destroy']);
+
+// Route Program Studi
+$routes->get('/program-studi', [ProgramStudi::class, 'index']);
+$routes->post('/program-studi/create-data', [ProgramStudi::class, 'store']);
+$routes->post('/program-studi/update-data/(:num)', [ProgramStudi::class, 'update']);
+$routes->post('/program-studi/delete-data/(:num)', [ProgramStudi::class, 'destroy']);

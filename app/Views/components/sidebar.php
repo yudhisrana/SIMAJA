@@ -54,6 +54,14 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="/program-studi" class="nav-link">
+                        <i class="nav-icon fas fa-university"></i>
+                        <p>
+                            Program Studi
+                        </p>
+                    </a>
+                </li>
 
                 <li class="nav-header">MENU</li>
                 <li class="nav-item">
