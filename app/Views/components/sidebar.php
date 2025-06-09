@@ -71,6 +71,16 @@
                         </p>
                     </a>
                 </li>
+
+                <li class="nav-header">USER SETTING</li>
+                <li class="nav-item">
+                    <a href="/user" class="nav-link">
+                        <i class="nav-icon fas fa-users-cog"></i>
+                        <p>
+                            User
+                        </p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
