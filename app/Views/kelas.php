@@ -154,6 +154,10 @@
 <!-- SweetAlert2 -->
 <script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
 <script>
+    // csrf token
+    let csrfToken = '<?= csrf_token(); ?>';
+    let csrfHash = '<?= csrf_hash(); ?>';
+
     // datatable
     $(function() {
         $("#dataKelas")
@@ -250,12 +254,25 @@
         // tambah dan update
         $('#formKelas').submit(function(e) {
             e.preventDefault();
-            const data = $(this).serialize();
+            const kelas = $('#kelas').val();
+            const semester = $('#semester').val();
+            const tahunAjaran = $('#tahun_ajaran').val();
+
+            let isActive = 1;
+            if (modeModal === 'edit') {
+                isActive = $('#is_active').val();
+            }
 
             $.ajax({
                 url: url,
                 method: method,
-                data: data,
+                data: {
+                    [csrfToken]: csrfHash,
+                    kelas: kelas,
+                    semester: semester,
+                    tahun_ajaran: tahunAjaran,
+                    is_active: isActive
+                },
                 success: function(res) {
                     if (res.success) {
                         Swal.fire({
@@ -290,8 +307,6 @@
 
         // modal delete
         $('.btnDeleteKelas').click(function() {
-            const csrfName = $('input[name]').attr('name');
-            const csrfHash = $('input[name]').val();
             const id = $(this).data('id')
             url = baseUrl + 'kelas/delete-data/' + id;
             method = 'POST';
@@ -311,7 +326,7 @@
                         url: url,
                         method: method,
                         data: {
-                            [csrfName]: csrfHash,
+                            [csrfToken]: csrfHash,
                         },
                         success: function(res) {
                             if (res.success) {

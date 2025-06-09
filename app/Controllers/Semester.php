@@ -31,7 +31,7 @@ class Semester extends BaseController
     {
 
         $rules = [
-            'nama_semester' => [
+            'semester' => [
                 'rules' => 'required|min_length[3]|is_unique[tbl_semester.semester_name]',
                 'errors' => [
                     'required' => 'Field semester tidak boleh kosong',
@@ -48,7 +48,7 @@ class Semester extends BaseController
         }
 
         $data = [
-            'semester_name' => ucwords(strtolower($this->request->getPost('nama_semester')))
+            'semester_name' => ucwords(strtolower($this->request->getPost('semester')))
         ];
 
         $this->semesterModel->insert($data);
@@ -63,7 +63,7 @@ class Semester extends BaseController
     {
 
         $rules = [
-            'nama_semester' => [
+            'semester' => [
                 'rules' => 'required|min_length[3]|is_unique[tbl_semester.semester_name,id,' . $id . ']',
                 'errors' => [
                     'required' => 'Field semester tidak boleh kosong',
@@ -80,7 +80,7 @@ class Semester extends BaseController
         }
 
         $data = [
-            'semester_name' => ucwords(strtolower($this->request->getPost('nama_semester'))),
+            'semester_name' => ucwords(strtolower($this->request->getPost('semester'))),
             'updated_at'    => date('Y-m-d H:i:s')
         ];
 

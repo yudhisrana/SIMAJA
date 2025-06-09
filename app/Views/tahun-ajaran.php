@@ -90,9 +90,9 @@
                 <form id="formTahunAjaran">
                     <?= csrf_field(); ?>
                     <div class="form-group">
-                        <label for="namaTahunAjaran">Tahun Ajaran</label>
-                        <input type="text" name="tahun_ajaran" class="form-control" id="namaTahunAjaran" placeholder="2025/2026" aria-describedby="namaTahunAjaran-error">
-                        <span id="namaTahunAjaran-error" class="error invalid-feedback" style="display: none;"></span>
+                        <label for="tahun_ajaran">Tahun Ajaran</label>
+                        <input type="text" name="tahun_ajaran" class="form-control" id="tahun_ajaran" placeholder="2025/2026" aria-describedby="tahun_ajaran-error">
+                        <span id="tahun_ajaran-error" class="error invalid-feedback" style="display: none;"></span>
                     </div>
                     <div class="d-flex justify-content-end align-items-center">
                         <button id="cancelModal" type="button" class="btn btn-danger mr-2" data-dismiss="modal">Batal</button>
@@ -115,6 +115,10 @@
 <!-- SweetAlert2 -->
 <script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
 <script>
+    // csrf token
+    let csrfToken = '<?= csrf_token(); ?>';
+    let csrfHash = '<?= csrf_hash(); ?>';
+
     // datatable
     $(function() {
         $("#dataTahunAjaran")
@@ -153,8 +157,8 @@
         // function reset
         function reset() {
             $('#formTahunAjaran')[0].reset();
-            $('#namaTahunAjaran').removeClass('is-invalid');
-            $('#namaTahunAjaran-error').text('').hide();
+            $('#tahun_ajaran').removeClass('is-invalid');
+            $('#tahun_ajaran-error').text('').hide();
         }
 
         // modal tambah
@@ -178,19 +182,22 @@
 
             $('#modalTahunAjaranLabel').text('Edit Data');
             $('#btnSubmitTahunAjaran').text('Update');
-            $('#namaTahunAjaran').val(tahunAjaran)
+            $('#tahun_ajaran').val(tahunAjaran)
             $('#modalTahunAjaran').modal('show');
         });
 
         // tambah dan update
         $('#formTahunAjaran').submit(function(e) {
             e.preventDefault();
-            const data = $(this).serialize();
+            const tahunAjaran = $('#tahun_ajaran').val();
 
             $.ajax({
                 url: url,
                 method: method,
-                data: data,
+                data: {
+                    [csrfToken]: csrfHash,
+                    tahun_ajaran: tahunAjaran,
+                },
                 success: function(res) {
                     if (res.success) {
                         Swal.fire({
@@ -202,8 +209,8 @@
                         });
                     } else {
                         if (res.errors && res.errors.tahun_ajaran) {
-                            $('#namaTahunAjaran').addClass('is-invalid');
-                            $('#namaTahunAjaran-error').text(res.errors.tahun_ajaran).show();
+                            $('#tahun_ajaran').addClass('is-invalid');
+                            $('#tahun_ajaran-error').text(res.errors.tahun_ajaran).show();
                         }
                     }
                 },
@@ -219,8 +226,6 @@
 
         // modal delete
         $('.btnDeleteTahunAjaran').click(function() {
-            const csrfName = $('input[name]').attr('name');
-            const csrfHash = $('input[name]').val();
             const id = $(this).data('id')
             url = baseUrl + 'tahun-ajaran/delete-data/' + id;
             method = 'POST';
@@ -240,7 +245,7 @@
                         url: url,
                         method: method,
                         data: {
-                            [csrfName]: csrfHash,
+                            [csrfToken]: csrfHash,
                         },
                         success: function(res) {
                             if (res.success) {
@@ -274,7 +279,7 @@
         // focus input saat modal selesai ditampilkan
         $('#modalTahunAjaran').on('shown.bs.modal', function() {
             if (modeModal === 'tambah') {
-                $('#namaTahunAjaran').trigger('focus');
+                $('#tahun_ajaran').trigger('focus');
             }
         });
 

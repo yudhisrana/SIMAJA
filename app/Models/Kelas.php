@@ -50,6 +50,7 @@ class Kelas extends Model
         return $this->select('tbl_kelas.*, tbl_semester.semester_name, tbl_tahun_ajaran.tahun')
             ->join('tbl_semester', 'tbl_semester.id = tbl_kelas.semester_id')
             ->join('tbl_tahun_ajaran', 'tbl_tahun_ajaran.id = tbl_kelas.tahun_ajaran_id')
+            ->orderBy('tbl_kelas.created_at', 'ASC')
             ->findAll();
     }
 }

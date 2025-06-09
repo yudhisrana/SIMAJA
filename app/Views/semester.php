@@ -90,9 +90,9 @@
                 <form id="formSemester">
                     <?= csrf_field(); ?>
                     <div class="form-group">
-                        <label for="namaSemester">Nama Semester</label>
-                        <input type="text" name="nama_semester" class="form-control" id="namaSemester" placeholder="Semester 1 / Semester 2 dst" aria-describedby="namaSemester-error">
-                        <span id="namaSemester-error" class="error invalid-feedback" style="display: none;"></span>
+                        <label for="semester">Nama Semester</label>
+                        <input type="text" name="semester" class="form-control" id="semester" placeholder="Semester 1 / Semester 2 dst" aria-describedby="semester-error">
+                        <span id="semester-error" class="error invalid-feedback" style="display: none;"></span>
                     </div>
                     <div class="d-flex justify-content-end align-items-center">
                         <button id="cancelModal" type="button" class="btn btn-danger mr-2" data-dismiss="modal">Batal</button>
@@ -115,6 +115,10 @@
 <!-- SweetAlert2 -->
 <script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
 <script>
+    // csrf token
+    let csrfToken = '<?= csrf_token(); ?>';
+    let csrfHash = '<?= csrf_hash(); ?>';
+
     // datatable
     $(function() {
         $("#dataSemester")
@@ -153,8 +157,8 @@
         // function reset
         function reset() {
             $('#formSemester')[0].reset();
-            $('#namaSemester').removeClass('is-invalid');
-            $('#namaSemester-error').text('').hide();
+            $('#semester').removeClass('is-invalid');
+            $('#semester-error').text('').hide();
         }
 
         // modal tambah
@@ -178,19 +182,22 @@
 
             $('#modalSemesterLabel').text('Edit Data');
             $('#btnSubmitSemester').text('Update');
-            $('#namaSemester').val(semester)
+            $('#semester').val(semester)
             $('#modalSemester').modal('show');
         });
 
         // tambah dan update
         $('#formSemester').submit(function(e) {
             e.preventDefault();
-            const data = $(this).serialize();
+            const semester = $('#semester').val();
 
             $.ajax({
                 url: url,
                 method: method,
-                data: data,
+                data: {
+                    [csrfToken]: csrfHash,
+                    semester: semester,
+                },
                 success: function(res) {
                     if (res.success) {
                         Swal.fire({
@@ -201,9 +208,9 @@
                             location.reload();
                         });
                     } else {
-                        if (res.errors && res.errors.nama_semester) {
-                            $('#namaSemester').addClass('is-invalid');
-                            $('#namaSemester-error').text(res.errors.nama_semester).show();
+                        if (res.errors && res.errors.semester) {
+                            $('#semester').addClass('is-invalid');
+                            $('#semester-error').text(res.errors.semester).show();
                         }
                     }
                 },
@@ -219,8 +226,6 @@
 
         // modal delete
         $('.btnDeleteSemester').click(function() {
-            const csrfName = $('input[name]').attr('name');
-            const csrfHash = $('input[name]').val();
             const id = $(this).data('id')
             url = baseUrl + 'semester/delete-data/' + id;
             method = 'POST';
@@ -240,7 +245,7 @@
                         url: url,
                         method: method,
                         data: {
-                            [csrfName]: csrfHash,
+                            [csrfToken]: csrfHash,
                         },
                         success: function(res) {
                             if (res.success) {
@@ -274,7 +279,7 @@
         // focus input saat modal selesai ditampilkan
         $('#modalSemester').on('shown.bs.modal', function() {
             if (modeModal === 'tambah') {
-                $('#namaSemester').trigger('focus');
+                $('#semester').trigger('focus');
             }
         });
 
