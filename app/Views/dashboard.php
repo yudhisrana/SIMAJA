@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/default') ?>
 
 <?= $this->section('content') ?>
-<section class="content">
+<section class="content pt-3">
     <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
         <div class="row">

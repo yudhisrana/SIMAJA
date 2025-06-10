@@ -21,7 +21,7 @@ class ProgramStudi extends BaseController
         $dataProdi = $this->prodiModel->findAll();
         $data = [
             'title'        => 'SIMAJA - Program Studi',
-            'page_name'    => 'Program Studi',
+            'table_name'   => 'Data Program Studi',
             'prodi'        => $dataProdi,
         ];
         return view("program-studi", $data);

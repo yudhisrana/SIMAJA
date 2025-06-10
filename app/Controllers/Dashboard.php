@@ -11,7 +11,6 @@ class Dashboard extends BaseController
     {
         $data = [
             'title'     => 'SIMAJA - Dashboard',
-            'page_name' => 'Dashboard'
         ];
         return view("dashboard", $data);
     }

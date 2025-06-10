@@ -16,7 +16,7 @@
 <?= $this->endSection('style'); ?>
 
 <?= $this->section('content') ?>
-<section class="content">
+<section class="content pt-3">
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
@@ -24,7 +24,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h3 class="card-title">Data <?= $page_name ?></h3>
+                            <h3 class="card-title"><?= $table_name ?></h3>
                             <button class="btn btn-primary btnTambahKelas">
                                 <i class="fas fa-plus mr-1"></i>
                                 <span>Tambah Data</span>

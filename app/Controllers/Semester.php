@@ -21,7 +21,7 @@ class Semester extends BaseController
         $dataSemester = $this->semesterModel->findAll();
         $data = [
             'title'     => 'SIMAJA - Semester',
-            'page_name' => 'Semester',
+            'table_name' => 'Data Semester',
             'semester'  => $dataSemester
         ];
         return view("semester", $data);

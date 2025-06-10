@@ -30,7 +30,7 @@ class Kelas extends BaseController
         $dataTahunAjaran = $this->tahunAjaranModel->findAll();
         $data = [
             'title'        => 'SIMAJA - Kelas',
-            'page_name'    => 'Kelas',
+            'table_name'   => 'Data Kelas',
             'kelas'        => $dataKelas,
             'semester'     => $dataSemester,
             'tahun_ajaran' => $dataTahunAjaran

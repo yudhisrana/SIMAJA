@@ -21,7 +21,7 @@ class TahunAjaran extends BaseController
         $dataTahunAjaran = $this->tahunAjaranModel->findAll();
         $data = [
             'title'        => 'SIMAJA - Tahun Ajaran',
-            'page_name'    => 'Tahun Ajaran',
+            'table_name'   => 'Data Tahun Ajaran',
             'tahun_ajaran' => $dataTahunAjaran,
         ];
         return view("tahun-ajaran", $data);
