@@ -52,4 +52,11 @@ class Dosen extends Model
             ->where('tbl_user.role_id', 3)
             ->orderBy('tbl_user.created_at', 'DESC');
     }
+
+    public function findUserId($id)
+    {
+        return $this->select('user_id')
+            ->where('id', $id)
+            ->first();
+    }
 }

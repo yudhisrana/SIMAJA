@@ -82,7 +82,15 @@
                                             ?>
                                         </td>
                                         <td>
-                                            <button class="btn btn-warning btnEditDosen">
+                                            <button class="btn btn-warning btnEditDosen"
+                                                data-id="<?= $value->id; ?>"
+                                                data-name="<?= htmlspecialchars(trim($value->name), ENT_QUOTES); ?>"
+                                                data-nidn="<?= htmlspecialchars(trim($value->nidn), ENT_QUOTES); ?>"
+                                                data-username="<?= htmlspecialchars(trim($value->username), ENT_QUOTES); ?>"
+                                                data-gender="<?= $value->gender; ?>"
+                                                data-image="<?= $value->image; ?>"
+                                                data-address="<?= htmlspecialchars(trim($value->address), ENT_QUOTES); ?>"
+                                                data-is_active="<?= $value->isActive; ?>">
                                                 <i class="far fa-edit"></i>
                                             </button>
                                             <button class="btn btn-danger btnDeleteDosen">
@@ -106,7 +114,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalDosen">-</h5>
+                <h5 class="modal-title" id="modalDosenLabel">-</h5>
             </div>
             <div class="modal-body">
                 <!-- form -->
@@ -132,7 +140,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="password">Password</label>
-                            <input type="password" name="password" class="form-control" id="password" placeholder="******" aria-describedby="password-error">
+                            <input type="text" name="password" class="form-control" id="password" placeholder="******" aria-describedby="password-error">
                             <span id="password-error" class="error invalid-feedback" style="display: none;"></span>
                         </div>
                     </div>
@@ -264,6 +272,7 @@
             $('#gender').removeClass('is-invalid');
             $('#name', '#nidn', '#username', '#password', '#gender').text('').hide();
             $('#gender option[value=""]').remove();
+            $('#status').addClass('d-none');
         }
 
         // modal tambah
@@ -279,17 +288,30 @@
         });
 
         // modal edit
-        $('.btnEditTahunAjaran').click(function() {
+        $('.btnEditDosen').click(function() {
             const id = $(this).data('id')
-            const tahunAjaran = $(this).data('tahun_ajaran')
+            const name = $(this).data('name');
+            const nidn = $(this).data('nidn');
+            const username = $(this).data('username');
+            const gender = $(this).data('gender');
+            const image = $(this).data('image');
+            const address = $(this).data('address');
+            const isActive = $(this).data('is_active');
             modeModal = 'edit';
-            url = 'tahun-ajaran/update-data/' + id;
+            url = 'user/dosen/update-data/' + id;
             method = 'POST';
 
-            $('#modalTahunAjaranLabel').text('Edit Data');
-            $('#btnSubmitTahunAjaran').text('Update');
-            $('#tahun_ajaran').val(tahunAjaran)
-            $('#modalTahunAjaran').modal('show');
+            $('#modalDosenLabel').text('Edit Data');
+            $('#btnSubmitDosen').text('Update');
+            $('#status').removeClass('d-none');
+            $('#name').val(name);
+            $('#nidn').val(nidn);
+            $('#username').val(username);
+            $('#gender').val(gender);
+            $('#image').val(image);
+            $('#address').val(address);
+            $('#is_active').val(isActive);
+            $('#modalDosen').modal('show');
         });
 
         // tambah dan update

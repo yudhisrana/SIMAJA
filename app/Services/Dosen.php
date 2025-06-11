@@ -24,16 +24,22 @@ class Dosen
         return $this->dosenModel->dosenWithRelations()->findAll();
     }
 
-    public function createDosen(array $data)
+    public function getUserId($id)
+    {
+        return $this->dosenModel->findUserId($id);
+    }
+
+    public function createDosen($data)
     {
         $userId = Uuid::uuid4()->toString();
         $dosenId = Uuid::uuid4()->toString();
+        $hashPassword = password_hash($data['password'], PASSWORD_DEFAULT);
 
         $dataUser = [
             'id'        => $userId,
             'name'      => $data['name'],
             'username'  => $data['username'],
-            'password'  => $data['password'],
+            'password'  => $hashPassword,
             'gender'    => $data['gender'],
             'address'   => $data['address'],
             'is_active' => $data['is_active'],
@@ -62,6 +68,53 @@ class Dosen
             return [
                 'success' => true,
                 'message' => 'Data dosen berhasil ditambahkan',
+            ];
+        } catch (\Throwable $th) {
+            $this->db->transRollback();
+            return [
+                'success' => false,
+                'message' => 'Terjadi kesalahan : ' . $th->getMessage(),
+            ];
+        }
+    }
+
+    public function updateDosen($data, $idUser, $idDosen)
+    {
+        $dataUser = [
+            'name'       => $data['name'],
+            'username'   => $data['username'],
+            'gender'     => $data['gender'],
+            'address'    => $data['address'],
+            'is_active'  => $data['is_active'],
+            'updated_at' => date('Y-m-d H:i:s'),
+        ];
+
+        if (!empty($data['password'])) {
+            $dataUser['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        } else {
+            unset($dataUser['password']);
+        }
+
+        $dataDosen = [
+            'nidn'    => $data['nidn'],
+        ];
+
+        try {
+            $this->db->transBegin();
+
+            if (!$this->userModel->update($idUser, $dataUser)) {
+                throw new \Exception("update data dosen gagal");
+            }
+
+            if (!$this->dosenModel->update($idDosen, $dataDosen)) {
+                throw new \Exception("update data dosen gagal");
+            }
+
+            $this->db->transCommit();
+
+            return [
+                'success' => true,
+                'message' => 'Data dosen berhasil diupdate',
             ];
         } catch (\Throwable $th) {
             $this->db->transRollback();
