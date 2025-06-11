@@ -2,6 +2,7 @@
 
 use App\Controllers\Auth;
 use App\Controllers\Dashboard;
+use App\Controllers\Dosen;
 use App\Controllers\Home;
 use App\Controllers\Kelas;
 use App\Controllers\ProgramStudi;
@@ -43,3 +44,15 @@ $routes->get('/program-studi', [ProgramStudi::class, 'index']);
 $routes->post('/program-studi/create-data', [ProgramStudi::class, 'store']);
 $routes->post('/program-studi/update-data/(:num)', [ProgramStudi::class, 'update']);
 $routes->post('/program-studi/delete-data/(:num)', [ProgramStudi::class, 'destroy']);
+
+// Route Dosen
+$routes->get('/user/dosen', [Dosen::class, 'index']);
+$routes->post('/user/dosen/create-data', [Dosen::class, 'store']);
+// $routes->post('/user/update-data/(:num)', [User::class, 'update']);
+// $routes->post('/user/delete-data/(:num)', [User::class, 'destroy']);
+
+// Route Mahasiswa
+// $routes->get('/user', [User::class, 'index']);
+// $routes->post('/user/create-data', [User::class, 'store']);
+// $routes->post('/user/update-data/(:num)', [User::class, 'update']);
+// $routes->post('/user/delete-data/(:num)', [User::class, 'destroy']);
