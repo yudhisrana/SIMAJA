@@ -37,12 +37,33 @@ class Dosen
                     'min_length' => 'Password minimal 6 karakter',
                 ]
             ],
+            'email' => [
+                'rules' => 'permit_empty|valid_email|is_unique[tbl_user.email]',
+                'errors' => [
+                    'valid_email' => 'Format email tidak valid',
+                    'is_unique' => 'Email sudah terdaftar',
+                ]
+            ],
+            'phone' => [
+                'rules' => 'permit_empty|regex_match[/^[0-9]{10,15}$/]',
+                'errors' => [
+                    'regex_match' => 'Nomor telepon harus berupa angka dengan panjang 10-15 karakter',
+                ]
+            ],
             'gender' => [
                 'rules' => 'required',
                 'errors' => [
                     'required' => 'Field jenis kelamin wajib dipilih',
                 ]
             ],
+            'image' => [
+                'rules' => 'is_image[image]|mime_in[image,image/jpg,image/jpeg,image/png]|max_size[image,1024]',
+                'errors' => [
+                    'is_image' => 'File yang diunggah harus berupa gambar',
+                    'mime_in' => 'File gambar harus berformat jpg, jpeg, atau png',
+                    'max_size' => 'Ukuran gambar maksimal 1MB',
+                ]
+            ]
         ];
     }
 
@@ -78,12 +99,33 @@ class Dosen
                     'min_length' => 'Password minimal 6 karakter',
                 ]
             ],
+            'email' => [
+                'rules' => 'permit_empty|valid_email|is_unique[tbl_user.email,id,' . $idUser . ']',
+                'errors' => [
+                    'valid_email' => 'Format email tidak valid',
+                    'is_unique' => 'Email sudah terdaftar',
+                ]
+            ],
+            'phone' => [
+                'rules' => 'permit_empty|regex_match[/^[0-9]{10,15}$/]',
+                'errors' => [
+                    'regex_match' => 'Nomor telepon harus berupa angka dengan panjang 10-15 karakter',
+                ]
+            ],
             'gender' => [
                 'rules' => 'required',
                 'errors' => [
                     'required' => 'Field jenis kelamin wajib dipilih',
                 ]
             ],
+            'image' => [
+                'rules' => 'is_image[image]|mime_in[image,image/jpg,image/jpeg,image/png]|max_size[image,1024]',
+                'errors' => [
+                    'is_image' => 'File yang diunggah harus berupa gambar',
+                    'mime_in' => 'File gambar harus berformat jpg, jpeg, atau png',
+                    'max_size' => 'Ukuran gambar maksimal 1MB',
+                ]
+            ]
         ];
     }
 }

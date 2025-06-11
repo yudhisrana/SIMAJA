@@ -87,7 +87,9 @@
                                                 data-name="<?= htmlspecialchars(trim($value->name), ENT_QUOTES); ?>"
                                                 data-nidn="<?= htmlspecialchars(trim($value->nidn), ENT_QUOTES); ?>"
                                                 data-username="<?= htmlspecialchars(trim($value->username), ENT_QUOTES); ?>"
-                                                data-gender="<?= $value->gender; ?>"
+                                                data-email="<?= $value->email; ?>"
+                                                data-phone="<?= $value->phone; ?>"
+                                                data-gender="<?= htmlspecialchars(trim($value->gender), ENT_QUOTES); ?>"
                                                 data-image="<?= $value->image; ?>"
                                                 data-address="<?= htmlspecialchars(trim($value->address), ENT_QUOTES); ?>"
                                                 data-is_active="<?= $value->isActive; ?>">
@@ -118,8 +120,9 @@
             </div>
             <div class="modal-body">
                 <!-- form -->
-                <form id="formDosen">
+                <form id="formDosen" enctype="multipart/form-data">
                     <?= csrf_field(); ?>
+                    <input type="hidden" id="old_image" name="old_image">
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="name">Nama Dosen</label>
@@ -140,8 +143,20 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="password">Password</label>
-                            <input type="text" name="password" class="form-control" id="password" placeholder="******" aria-describedby="password-error">
+                            <input type="password" name="password" class="form-control" id="password" placeholder="******" aria-describedby="password-error">
                             <span id="password-error" class="error invalid-feedback" style="display: none;"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="email">Email</label>
+                            <input type="text" name="email" class="form-control" id="email" placeholder="contoh@email.com" aria-describedby="email-error">
+                            <span id="email-error" class="error invalid-feedback" style="display: none;"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="phone">No Telepon</label>
+                            <input type="text" name="phone" class="form-control" id="phone" placeholder="082102024533" aria-describedby="phone-error">
+                            <span id="phone-error" class="error invalid-feedback" style="display: none;"></span>
                         </div>
                     </div>
                     <div class="form-row">
@@ -156,8 +171,9 @@
                         <div class="form-group col-md-6">
                             <label for="image">Image</label>
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="image">
+                                <input type="file" class="custom-file-input" id="image" name="image" onchange="imgPreview()">
                                 <label class="custom-file-label" for="image">Pilih image</label>
+                                <span id="image-error" class="error invalid-feedback" style="display: none;"></span>
                             </div>
                         </div>
                     </div>
@@ -269,10 +285,14 @@
             $('#nidn').removeClass('is-invalid');
             $('#username').removeClass('is-invalid');
             $('#password').removeClass('is-invalid');
+            $('#email').removeClass('is-invalid');
+            $('#phone').removeClass('is-invalid');
             $('#gender').removeClass('is-invalid');
-            $('#name', '#nidn', '#username', '#password', '#gender').text('').hide();
+            $('#image').removeClass('is-invalid');
+            $('#name', '#nidn', '#username', '#password', '#email', '#phone', '#gender', '#image').text('').hide();
             $('#gender option[value=""]').remove();
             $('#status').addClass('d-none');
+            $('.custom-file-label').text('Pilih image');
         }
 
         // modal tambah
@@ -293,6 +313,8 @@
             const name = $(this).data('name');
             const nidn = $(this).data('nidn');
             const username = $(this).data('username');
+            const email = $(this).data('email');
+            const phone = $(this).data('phone');
             const gender = $(this).data('gender');
             const image = $(this).data('image');
             const address = $(this).data('address');
@@ -307,8 +329,11 @@
             $('#name').val(name);
             $('#nidn').val(nidn);
             $('#username').val(username);
+            $('#email').val(email);
+            $('#phone').val(phone);
             $('#gender').val(gender);
-            $('#image').val(image);
+            $('#old_image').val(image);
+            $('.custom-file-label').text(image);
             $('#address').val(address);
             $('#is_active').val(isActive);
             $('#modalDosen').modal('show');
@@ -317,33 +342,15 @@
         // tambah dan update
         $('#formDosen').submit(function(e) {
             e.preventDefault();
-            const name = $('#name').val();
-            const nidn = $('#nidn').val();
-            const username = $('#username').val();
-            const password = $('#password').val();
-            const gender = $('#gender').val();
-            const image = $('#image').val();
-            const address = $('#address').val();
-
-            let isActive = 1;
-            if (modeModal === 'edit') {
-                isActive = $('#is_active').val();
-            }
+            const form = $('#formDosen')[0];
+            const formData = new FormData(form);
 
             $.ajax({
                 url: baseUrl + url,
                 method: method,
-                data: {
-                    [csrfToken]: csrfHash,
-                    name: name,
-                    nidn: nidn,
-                    username: username,
-                    password: password,
-                    gender: gender,
-                    image: image,
-                    address: address,
-                    is_active: isActive,
-                },
+                data: formData,
+                processData: false,
+                contentType: false,
                 success: function(res) {
                     if (res.success) {
                         Swal.fire({
@@ -358,8 +365,11 @@
                         $('#nidn').removeClass('is-invalid');
                         $('#username').removeClass('is-invalid');
                         $('#password').removeClass('is-invalid');
+                        $('#email').removeClass('is-invalid');
+                        $('#phone').removeClass('is-invalid');
                         $('#gender').removeClass('is-invalid');
-                        $('#name', '#nidn', '#username', '#password', '#gender').text('').hide();
+                        $('#image').removeClass('is-invalid');
+                        $('#name', '#nidn', '#username', '#password', '#email', '#phone', '#gender', '#image').text('').hide();
 
                         for (const field in res.errors) {
                             const errorMsg = res.errors[field];
@@ -443,5 +453,14 @@
             reset();
         });
     });
+
+    // image preview
+    function imgPreview() {
+        const image = $('#image').get(0);
+        const imageLabel = $('.custom-file-label');
+
+        const file = image.files[0];
+        file ? imageLabel.text(file.name) : imageLabel.text('Pilih image');
+    }
 </script>
 <?= $this->endSection('script'); ?>

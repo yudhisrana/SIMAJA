@@ -40,11 +40,21 @@ class Dosen
             'name'      => $data['name'],
             'username'  => $data['username'],
             'password'  => $hashPassword,
+            'email'     => $data['email'],
+            'phone'     => $data['phone'],
             'gender'    => $data['gender'],
             'address'   => $data['address'],
             'is_active' => $data['is_active'],
             'role_id'   => 3,
         ];
+
+        if (!empty($data['image']) && $data['image']->isValid()) {
+            $imageName = $data['image']->getRandomName();
+            $data['image']->move(FCPATH . 'assets/img/dosen', $imageName);
+            $dataUser['image'] = $imageName;
+        } else {
+            $dataUser['image'] = 'default.png';
+        }
 
         $dataDosen = [
             'id'      => $dosenId,
@@ -83,6 +93,8 @@ class Dosen
         $dataUser = [
             'name'       => $data['name'],
             'username'   => $data['username'],
+            'email'      => $data['email'],
+            'phone'      => $data['phone'],
             'gender'     => $data['gender'],
             'address'    => $data['address'],
             'is_active'  => $data['is_active'],
@@ -93,6 +105,19 @@ class Dosen
             $dataUser['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         } else {
             unset($dataUser['password']);
+        }
+
+        if (!empty($data['image']) && $data['image']->isValid()) {
+            $imageName = $data['image']->getRandomName();
+            $data['image']->move(FCPATH . 'assets/img/dosen', $imageName);
+            $dataUser['image'] = $imageName;
+
+            $oldImg = $data['old_image'];
+            if ($oldImg !== 'default-profile.png') {
+                unlink('assets/img/dosen/' . $oldImg);
+            }
+        } else {
+            unset($dataUser['image']);
         }
 
         $dataDosen = [
