@@ -37,7 +37,7 @@ class Dosen
             'gender'    => $data['gender'],
             'address'   => $data['address'],
             'is_active' => $data['is_active'],
-            // 'role_id'   => 3,
+            'role_id'   => 3,
         ];
 
         $dataDosen = [
