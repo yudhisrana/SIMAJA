@@ -38,6 +38,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Image</th>
                                     <th>Nama</th>
                                     <th>NIDN</th>
                                     <th>Username</th>
@@ -55,6 +56,9 @@
                                 <?php foreach ($dosen as $key => $value) { ?>
                                     <tr>
                                         <td><?= $key + 1; ?></td>
+                                        <td>
+                                            <img src="<?= '/assets/img/dosen/' . $value->image ?>" class="rounded-circle" style="width: 2.5rem; height: 2.5rem; object-fit: cover;" alt="User Image">
+                                        </td>
                                         <td><?= esc(trim($value->name)); ?></td>
                                         <td><?= esc(trim($value->nidn)); ?></td>
                                         <td><?= esc(trim($value->username)); ?></td>
@@ -229,7 +233,8 @@
                     },
                     {
                         targets: 1,
-                        searchable: true,
+                        searchable: false,
+                        orderable: false,
                     },
                     {
                         targets: 2,
@@ -253,7 +258,7 @@
                     },
                     {
                         targets: 7,
-                        searchable: false,
+                        searchable: true,
                     },
                     {
                         targets: 8,
@@ -261,7 +266,7 @@
                     },
                     {
                         targets: 9,
-                        searchable: false,
+                        searchable: true,
                     },
                     {
                         targets: 10,
@@ -269,6 +274,11 @@
                     },
                     {
                         targets: 11,
+                        searchable: true,
+                        className: 'text-center'
+                    },
+                    {
+                        targets: 12,
                         searchable: false,
                         orderable: false,
                         className: 'text-center'
