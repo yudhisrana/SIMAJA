@@ -57,7 +57,14 @@
                                     <tr>
                                         <td><?= $key + 1; ?></td>
                                         <td>
-                                            <img src="<?= '/assets/img/dosen/' . $value->image ?>" class="rounded-circle" style="width: 2.5rem; height: 2.5rem; object-fit: cover;" alt="User Image">
+                                            <img src="
+                                                <?php if ($value->image !== 'default-profile.png') { ?>
+                                                    <?= '/assets/img/dosen/' . $value->image ?>
+                                                <?php } else { ?>
+                                                    <?= '/assets/img/' . $value->image ?>
+                                                <?php } ?>"
+                                                class="rounded-circle"
+                                                style="width: 2.5rem; height: 2.5rem; object-fit: cover;" alt="User Image">
                                         </td>
                                         <td><?= esc(trim($value->name)); ?></td>
                                         <td><?= esc(trim($value->nidn)); ?></td>
@@ -99,7 +106,8 @@
                                                 data-is_active="<?= $value->isActive; ?>">
                                                 <i class="far fa-edit"></i>
                                             </button>
-                                            <button class="btn btn-danger btnDeleteDosen">
+                                            <button class="btn btn-danger btnDeleteDosen"
+                                                data-id="<?= $value->id; ?>">
                                                 <i class="far fa-trash-alt"></i>
                                             </button>
                                         </td>
@@ -399,9 +407,9 @@
         });
 
         // modal delete
-        $('.btnDeleteTahunAjaran').click(function() {
+        $('.btnDeleteDosen').click(function() {
             const id = $(this).data('id')
-            url = baseUrl + 'tahun-ajaran/delete-data/' + id;
+            url = baseUrl + 'user/dosen/delete-data/' + id;
             method = 'POST';
 
             Swal.fire({

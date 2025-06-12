@@ -68,9 +68,17 @@ class Dosen extends BaseController
 
     public function update($id)
     {
-        $idUser = $this->dosenService->getUserId($id);
+        $dataDosen = $this->dosenService->getDataById($id);
+        if (empty($dataDosen)) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'success' => false,
+                    'errors'  => 'Data dosen tidak ditemukan',
+                ]);
+        }
 
-        $rules = $this->ruleValidation->ruleUpdate($idUser->user_id, $id);
+        $rules = $this->ruleValidation->ruleUpdate($dataDosen->user_id, $id);
         if (!$this->validate($rules)) {
             return $this->response->setJSON([
                 'success' => false,
@@ -92,7 +100,31 @@ class Dosen extends BaseController
             'is_active' => $this->request->getPost('is_active'),
         ];
 
-        $result = $this->dosenService->updateDosen($data, $idUser->user_id, $id);
+        $result = $this->dosenService->updateDosen($data, $dataDosen->user_id, $id);
+        if ($result['success']) {
+            return $this->response
+                ->setStatusCode(200)
+                ->setJSON($result);
+        }
+
+        return $this->response
+            ->setStatusCode(500)
+            ->setJSON($result);
+    }
+
+    public function destroy($id)
+    {
+        $dataDosen = $this->dosenService->getDataById($id);
+        if (empty($dataDosen)) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'success' => false,
+                    'errors'  => 'Data dosen tidak ditemukan',
+                ]);
+        }
+
+        $result = $this->dosenService->deleteDosen($dataDosen->user_id);
         if ($result['success']) {
             return $this->response
                 ->setStatusCode(200)

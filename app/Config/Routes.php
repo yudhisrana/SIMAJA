@@ -49,7 +49,7 @@ $routes->post('/program-studi/delete-data/(:num)', [ProgramStudi::class, 'destro
 $routes->get('/user/dosen', [Dosen::class, 'index']);
 $routes->post('/user/dosen/create-data', [Dosen::class, 'store']);
 $routes->post('/user/dosen/update-data/(:hash)', [Dosen::class, 'update']);
-// $routes->post('/user/delete-data/(:num)', [User::class, 'destroy']);
+$routes->post('/user/dosen/delete-data/(:hash)', [Dosen::class, 'destroy']);
 
 // Route Mahasiswa
 // $routes->get('/user', [User::class, 'index']);

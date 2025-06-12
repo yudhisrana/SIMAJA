@@ -21,12 +21,12 @@ class Dosen
 
     public function getDosen()
     {
-        return $this->dosenModel->dosenWithRelations()->findAll();
+        return $this->dosenModel->dosenWithRelations();
     }
 
-    public function getUserId($id)
+    public function getDataById($id)
     {
-        return $this->dosenModel->findUserId($id);
+        return $this->dosenModel->findById($id);
     }
 
     public function createDosen($data)
@@ -53,7 +53,7 @@ class Dosen
             $data['image']->move(FCPATH . 'assets/img/dosen', $imageName);
             $dataUser['image'] = $imageName;
         } else {
-            $dataUser['image'] = 'default.png';
+            $dataUser['image'] = 'default-profile.png';
         }
 
         $dataDosen = [
@@ -65,11 +65,11 @@ class Dosen
         try {
             $this->db->transBegin();
 
-            if (!$this->userModel->insert($dataUser)) {
-                throw new \Exception("insert data dosen gagal");
+            if (!$this->userModel->saveData($dataUser)) {
+                throw new \Exception("insert data user gagal");
             }
 
-            if (!$this->dosenModel->insert($dataDosen)) {
+            if (!$this->dosenModel->saveData($dataDosen)) {
                 throw new \Exception("insert data dosen gagal");
             }
 
@@ -114,7 +114,7 @@ class Dosen
 
             $oldImg = $data['old_image'];
             if ($oldImg !== 'default-profile.png') {
-                unlink('assets/img/dosen/' . $oldImg);
+                unlink(FCPATH . 'assets/img/dosen/' . $oldImg);
             }
         } else {
             unset($dataUser['image']);
@@ -127,11 +127,11 @@ class Dosen
         try {
             $this->db->transBegin();
 
-            if (!$this->userModel->update($idUser, $dataUser)) {
-                throw new \Exception("update data dosen gagal");
+            if (!$this->userModel->updateData($idUser, $dataUser)) {
+                throw new \Exception("update data user gagal");
             }
 
-            if (!$this->dosenModel->update($idDosen, $dataDosen)) {
+            if (!$this->dosenModel->updateData($idDosen, $dataDosen)) {
                 throw new \Exception("update data dosen gagal");
             }
 
@@ -143,6 +143,32 @@ class Dosen
             ];
         } catch (\Throwable $th) {
             $this->db->transRollback();
+            return [
+                'success' => false,
+                'message' => 'Terjadi kesalahan : ' . $th->getMessage(),
+            ];
+        }
+    }
+
+    public function deleteDosen($id)
+    {
+        $data = $this->userModel->findByID($id);
+
+        try {
+            if (!$this->userModel->deleteData($id)) {
+                throw new \Exception("hapus data dosen gagal");
+            }
+
+            if (!empty($data->image) && $data->image !== 'default-profile.png') {
+                $imgPath = FCPATH . '/assets/img/dosen/' . $data->image;
+                unlink($imgPath);
+            }
+
+            return [
+                'success' => true,
+                'message' => 'Data dosen berhasil dihapus',
+            ];
+        } catch (\Throwable $th) {
             return [
                 'success' => false,
                 'message' => 'Terjadi kesalahan : ' . $th->getMessage(),

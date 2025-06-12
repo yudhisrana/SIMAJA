@@ -18,6 +18,7 @@ class Dosen extends Entity
         'phone'     => 'phone',
         'address'   => 'address',
         'gender'    => 'gender',
+        'image'     => 'image',
         'isActive'  => 'is_active',
         'createdAt' => 'created_at',
         'updatedAt' => 'updated_at',

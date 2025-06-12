@@ -9,16 +9,10 @@ class User extends Model
     protected $table            = 'tbl_user';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = false;
-    protected $returnType       = 'array';
+    protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = ['id', 'name', 'username', 'password', 'email', 'phone', 'address', 'gender', 'image', 'is_active', 'role_id', 'updated_at'];
-
-    protected bool $allowEmptyInserts = false;
-    protected bool $updateOnlyChanged = true;
-
-    protected array $casts = [];
-    protected array $castHandlers = [];
 
     // Dates
     protected $useTimestamps = true;
@@ -27,20 +21,23 @@ class User extends Model
     protected $updatedField  = '';
     protected $deletedField  = '';
 
-    // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
-    protected $skipValidation       = false;
-    protected $cleanValidationRules = true;
+    public function findByID($id)
+    {
+        return $this->select()->where('id', $id)->first();
+    }
 
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    public function saveData($data)
+    {
+        return $this->insert($data);
+    }
+
+    public function updateData($id, $data)
+    {
+        return $this->update($id, $data);
+    }
+
+    public function deleteData($id)
+    {
+        return $this->delete($id);
+    }
 }
