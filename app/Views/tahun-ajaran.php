@@ -207,19 +207,21 @@
                         }).then(() => {
                             location.reload();
                         });
-                    } else {
-                        if (res.errors && res.errors.tahun_ajaran) {
-                            $('#tahun_ajaran').addClass('is-invalid');
-                            $('#tahun_ajaran-error').text(res.errors.tahun_ajaran).show();
-                        }
                     }
                 },
-                error: function() {
-                    Swal.fire({
-                        title: 'Opsss..',
-                        text: 'Terjadi kesalahan server, silahkan coba lagi!',
-                        icon: "error"
-                    })
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        const errMsg = xhr.responseJSON.errors;
+                        $('#tahun_ajaran').addClass('is-invalid');
+                        $('#tahun_ajaran-error').text(errMsg.tahun_ajaran).show();
+                    } else {
+                        const errMsg = xhr.responseJSON.message;
+                        Swal.fire({
+                            title: 'Opsss..',
+                            text: errMsg,
+                            icon: "error"
+                        })
+                    }
                 }
             })
         });
@@ -256,18 +258,13 @@
                                 }).then(() => {
                                     location.reload();
                                 })
-                            } else {
-                                Swal.fire({
-                                    title: 'Opsss..',
-                                    text: 'Gagal menghapus data tahunajaran',
-                                    icon: "error"
-                                })
                             }
                         },
-                        error: function() {
+                        error: function(xhr) {
+                            const errMsg = xhr.responseJSON.message;
                             Swal.fire({
                                 title: 'Opsss..',
-                                text: 'Terjadi kesalahan server, silahkan coba lagi!',
+                                text: errMsg,
                                 icon: "error"
                             })
                         }

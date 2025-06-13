@@ -24,14 +24,12 @@ class TahunAjaran extends BaseController
     public function index()
     {
         $dataTahunAjaran = $this->tahunAjaranService->getData();
-        if (!$dataTahunAjaran['success']) {
-            return $this->response->setStatusCode(500)->setJSON($dataTahunAjaran);
-        }
+        $tahunAjaran = $dataTahunAjaran['success'] ? $dataTahunAjaran['data'] : [];
 
         $data = [
             'title'        => 'SIMAJA - Tahun Ajaran',
             'table_name'   => 'Data Tahun Ajaran',
-            'tahun_ajaran' => $dataTahunAjaran['data'],
+            'tahun_ajaran' => $tahunAjaran,
         ];
 
         return view("tahun-ajaran", $data);
@@ -41,10 +39,12 @@ class TahunAjaran extends BaseController
     {
         $rules = $this->tahunAjaranValidation->ruleStore();
         if (!$this->validate($rules)) {
-            return $this->response->setJSON([
-                'success' => false,
-                'errors' => $this->validation->getErrors()
-            ]);
+            return $this->response
+                ->setStatusCode(422)
+                ->setJSON([
+                    'success' => false,
+                    'errors'  => $this->validation->getErrors()
+                ]);
         }
 
         $data = [
@@ -53,10 +53,10 @@ class TahunAjaran extends BaseController
 
         $result = $this->tahunAjaranService->createTahunAjaran($data);
         if (!$result['success']) {
-            return $this->response->setStatusCode(500)->setJSON($result);
+            return $this->response->setStatusCode($result['code'])->setJSON($result);
         }
 
-        return $this->response->setStatusCode(200)->setJSON($result);
+        return $this->response->setStatusCode($result['code'])->setJSON($result);
     }
 
     public function update($id)
@@ -75,19 +75,19 @@ class TahunAjaran extends BaseController
 
         $result = $this->tahunAjaranService->updateTahunAjaran($id, $data);
         if (!$result['success']) {
-            return $this->response->setStatusCode(500)->setJSON($result);
+            return $this->response->setStatusCode($result['code'])->setJSON($result);
         }
 
-        return $this->response->setStatusCode(200)->setJSON($result);
+        return $this->response->setStatusCode($result['code'])->setJSON($result);
     }
 
     public function destroy($id)
     {
         $result = $this->tahunAjaranService->deleteTahunAjaran($id);
         if (!$result['success']) {
-            return $this->response->setStatusCode(500)->setJSON($result);
+            return $this->response->setStatusCode($result['code'])->setJSON($result);
         }
 
-        return $this->response->setStatusCode(200)->setJSON($result);
+        return $this->response->setStatusCode($result['code'])->setJSON($result);
     }
 }
