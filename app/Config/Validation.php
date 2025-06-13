@@ -3,6 +3,7 @@
 namespace Config;
 
 use App\Validation\Dosen;
+use App\Validation\TahunAjaran;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Validation\StrictRules\CreditCardRules;
 use CodeIgniter\Validation\StrictRules\FileRules;
@@ -26,6 +27,7 @@ class Validation extends BaseConfig
         FormatRules::class,
         FileRules::class,
         CreditCardRules::class,
+        TahunAjaran::class,
         Dosen::class,
     ];
 

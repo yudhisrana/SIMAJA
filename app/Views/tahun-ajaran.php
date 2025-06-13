@@ -48,21 +48,21 @@
                                 <?php foreach ($tahun_ajaran as $key => $value) { ?>
                                     <tr>
                                         <td><?= $key + 1; ?></td>
-                                        <td><?= esc(trim($value['tahun'] ?? '')) ?></td>
+                                        <td><?= esc(trim($value->tahun ?? '')) ?></td>
                                         <td>
-                                            <?= $value['created_at'] ? date('d-m-Y H:i:s', strtotime($value['created_at'])) : '-' ?>
+                                            <?= $value->created_at ? date('d-m-Y H:i:s', strtotime($value->created_at)) : '-' ?>
                                         </td>
                                         <td>
-                                            <?= $value['updated_at'] ? date('d-m-Y H:i:s', strtotime($value['updated_at'])) : '-' ?>
+                                            <?= $value->updated_at ? date('d-m-Y H:i:s', strtotime($value->updated_at)) : '-' ?>
                                         </td>
                                         <td>
                                             <button class="btn btn-warning btnEditTahunAjaran"
-                                                data-id="<?= $value['id']; ?>"
-                                                data-tahun_ajaran="<?= htmlspecialchars(trim($value['tahun']), ENT_QUOTES) ?>">
+                                                data-id="<?= $value->id; ?>"
+                                                data-tahun_ajaran="<?= htmlspecialchars(trim($value->tahun), ENT_QUOTES) ?>">
                                                 <i class="far fa-edit"></i>
                                             </button>
                                             <button class="btn btn-danger btnDeleteTahunAjaran"
-                                                data-id="<?= $value['id']; ?>">
+                                                data-id="<?= $value->id; ?>">
                                                 <i class="far fa-trash-alt"></i>
                                             </button>
                                         </td>
@@ -164,7 +164,7 @@
         // modal tambah
         $('.btnTambahTahunAjaran').click(function() {
             modeModal = 'tambah';
-            url = 'tahun-ajaran/create-data';
+            url = baseUrl + 'tahun-ajaran/create-data';
             method = 'POST';
 
             $('#modalTahunAjaranLabel').text('Tambah Data');
@@ -177,7 +177,7 @@
             const id = $(this).data('id')
             const tahunAjaran = $(this).data('tahun_ajaran')
             modeModal = 'edit';
-            url = 'tahun-ajaran/update-data/' + id;
+            url = baseUrl + 'tahun-ajaran/update-data/' + id;
             method = 'POST';
 
             $('#modalTahunAjaranLabel').text('Edit Data');
