@@ -11,15 +11,13 @@ use Config\Services;
 
 class TahunAjaran extends BaseController
 {
-    protected $tahunAjaranModel;
     protected $tahunAjaranService;
-    protected $ruleValidation;
+    protected $tahunAjaranValidation;
     protected $validation;
     public function __construct()
     {
-        $this->tahunAjaranModel = new ModelsTahunAjaran();
         $this->tahunAjaranService = new ServicesTahunAjaran();
-        $this->ruleValidation = new ValidationTahunAjaran();
+        $this->tahunAjaranValidation = new ValidationTahunAjaran();
         $this->validation = Services::validation();
     }
 
@@ -41,7 +39,7 @@ class TahunAjaran extends BaseController
 
     public function store()
     {
-        $rules = $this->ruleValidation->ruleStore();
+        $rules = $this->tahunAjaranValidation->ruleStore();
         if (!$this->validate($rules)) {
             return $this->response->setJSON([
                 'success' => false,
@@ -63,7 +61,7 @@ class TahunAjaran extends BaseController
 
     public function update($id)
     {
-        $rules = $this->ruleValidation->ruleUpdate($id);
+        $rules = $this->tahunAjaranValidation->ruleUpdate($id);
         if (!$this->validate($rules)) {
             return $this->response->setJSON([
                 'success' => false,
