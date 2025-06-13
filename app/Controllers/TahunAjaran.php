@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\TahunAjaran as ModelsTahunAjaran;
 use App\Services\TahunAjaran as ServicesTahunAjaran;
 use App\Validation\TahunAjaran as ValidationTahunAjaran;
 use CodeIgniter\HTTP\ResponseInterface;
