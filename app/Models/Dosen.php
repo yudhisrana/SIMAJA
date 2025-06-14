@@ -15,7 +15,7 @@ class Dosen extends Model
     protected $protectFields    = true;
     protected $allowedFields    = ['id', 'user_id', 'nidn'];
 
-    public function dosenWithRelations()
+    public function findAllData()
     {
         return $this->select('tbl_dosen.*, tbl_user.name, tbl_user.username, tbl_user.email, tbl_user.phone, tbl_user.address, tbl_user.gender, tbl_user.image, tbl_user.is_active, tbl_user.created_at, tbl_user.updated_at')
             ->join('tbl_user', 'tbl_user.id = tbl_dosen.user_id')

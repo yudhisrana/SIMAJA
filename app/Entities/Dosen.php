@@ -12,6 +12,9 @@ class Dosen extends Entity
         'nidn'     => null,
     ];
     protected $datamap = [
+        'id'        => 'id',
+        'userId'    => 'user_id',
+        'nidn'      => 'nidn',
         'name'      => 'name',
         'username'  => 'username',
         'email'     => 'email',

@@ -23,11 +23,14 @@ class Dosen extends BaseController
     public function index()
     {
         $dataDosen = $this->dosenService->getDosen();
+        $dosen = $dataDosen['success'] ? $dataDosen['data'] : [];
+
         $data = [
             'title'        => 'SIMAJA - Dosen',
             'table_name'   => 'Data Dosen',
-            'dosen'        => $dataDosen,
+            'dosen'        => $dosen,
         ];
+
         return view("dosen", $data);
     }
 
@@ -35,10 +38,12 @@ class Dosen extends BaseController
     {
         $rules = $this->ruleValidation->ruleStore();
         if (!$this->validate($rules)) {
-            return $this->response->setJSON([
-                'success' => false,
-                'errors'  => $this->validation->getErrors(),
-            ]);
+            return $this->response
+                ->setStatusCode(422)
+                ->setJSON([
+                    'success' => false,
+                    'errors'  => $this->validation->getErrors(),
+                ]);
         }
 
         $data = [
@@ -55,35 +60,27 @@ class Dosen extends BaseController
         ];
 
         $result = $this->dosenService->createDosen($data);
-        if ($result['success']) {
+        if (!$result['success']) {
             return $this->response
-                ->setStatusCode(200)
+                ->setStatusCode($result['code'])
                 ->setJSON($result);
         }
 
         return $this->response
-            ->setStatusCode(500)
+            ->setStatusCode($result['code'])
             ->setJSON($result);
     }
 
-    public function update($id)
+    public function update($id, $userId)
     {
-        $dataDosen = $this->dosenService->getDataById($id);
-        if (empty($dataDosen)) {
+        $rules = $this->ruleValidation->ruleUpdate($id, $userId);
+        if (!$this->validate($rules)) {
             return $this->response
-                ->setStatusCode(404)
+                ->setStatusCode(422)
                 ->setJSON([
                     'success' => false,
-                    'errors'  => 'Data dosen tidak ditemukan',
+                    'errors'  => $this->validation->getErrors(),
                 ]);
-        }
-
-        $rules = $this->ruleValidation->ruleUpdate($dataDosen->user_id, $id);
-        if (!$this->validate($rules)) {
-            return $this->response->setJSON([
-                'success' => false,
-                'errors'  => $this->validation->getErrors(),
-            ]);
         }
 
         $data = [
@@ -100,39 +97,29 @@ class Dosen extends BaseController
             'is_active' => $this->request->getPost('is_active'),
         ];
 
-        $result = $this->dosenService->updateDosen($data, $dataDosen->user_id, $id);
-        if ($result['success']) {
+        $result = $this->dosenService->updateDosen($data, $id, $userId);
+        if (!$result['success']) {
             return $this->response
-                ->setStatusCode(200)
+                ->setStatusCode($result['code'])
                 ->setJSON($result);
         }
 
         return $this->response
-            ->setStatusCode(500)
+            ->setStatusCode($result['code'])
             ->setJSON($result);
     }
 
     public function destroy($id)
     {
-        $dataDosen = $this->dosenService->getDataById($id);
-        if (empty($dataDosen)) {
+        $result = $this->dosenService->deleteDosen($id);
+        if (!$result['success']) {
             return $this->response
-                ->setStatusCode(404)
-                ->setJSON([
-                    'success' => false,
-                    'errors'  => 'Data dosen tidak ditemukan',
-                ]);
-        }
-
-        $result = $this->dosenService->deleteDosen($dataDosen->user_id);
-        if ($result['success']) {
-            return $this->response
-                ->setStatusCode(200)
+                ->setStatusCode($result['code'])
                 ->setJSON($result);
         }
 
         return $this->response
-            ->setStatusCode(500)
+            ->setStatusCode($result['code'])
             ->setJSON($result);
     }
 }

@@ -67,7 +67,7 @@ class Dosen
         ];
     }
 
-    public function ruleUpdate($idUser, $idDosen)
+    public function ruleUpdate($idDosen, $idUser)
     {
         return [
             'name' => [

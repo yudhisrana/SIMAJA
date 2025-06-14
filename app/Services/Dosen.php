@@ -21,12 +21,26 @@ class Dosen
 
     public function getDosen()
     {
-        return $this->dosenModel->dosenWithRelations();
-    }
+        try {
+            $result = $this->dosenModel->findAllData();
+            if (empty($result)) {
+                return [
+                    'success' => true,
+                    'data'    => [],
+                ];
+            }
 
-    public function getDataById($id)
-    {
-        return $this->dosenModel->findById($id);
+            return [
+                'success' => true,
+                'data'    => $result,
+            ];
+        } catch (\Throwable $th) {
+            log_message('error', $th->getMessage());
+            return [
+                'success' => true,
+                'data'    => [],
+            ];
+        }
     }
 
     public function createDosen($data)
@@ -66,30 +80,49 @@ class Dosen
             $this->db->transBegin();
 
             if (!$this->userModel->saveData($dataUser)) {
-                throw new \Exception("insert data user gagal");
+                return [
+                    'success' => false,
+                    'code'    => 500,
+                    'message' => 'Gagal menambahkan data dosen',
+                ];
             }
 
             if (!$this->dosenModel->saveData($dataDosen)) {
-                throw new \Exception("insert data dosen gagal");
+                return [
+                    'success' => false,
+                    'code'    => 500,
+                    'message' => 'Gagal menambahkan data dosen',
+                ];
             }
 
             $this->db->transCommit();
 
             return [
                 'success' => true,
+                'code'    => 201,
                 'message' => 'Data dosen berhasil ditambahkan',
             ];
         } catch (\Throwable $th) {
             $this->db->transRollback();
             return [
                 'success' => false,
+                'code'    => 500,
                 'message' => 'Terjadi kesalahan : ' . $th->getMessage(),
             ];
         }
     }
 
-    public function updateDosen($data, $idUser, $idDosen)
+    public function updateDosen($data, $idDosen, $idUser)
     {
+        $existing = $this->dosenModel->findById($idDosen);
+        if (!$existing) {
+            return [
+                'success'  => false,
+                'code'    => 404,
+                'message' => 'Data dosen tidak ditemukan'
+            ];
+        }
+
         $dataUser = [
             'name'       => $data['name'],
             'username'   => $data['username'],
@@ -128,23 +161,33 @@ class Dosen
             $this->db->transBegin();
 
             if (!$this->userModel->updateData($idUser, $dataUser)) {
-                throw new \Exception("update data user gagal");
+                return [
+                    'success' => false,
+                    'code'    => 500,
+                    'message' => 'Gagal menambahkan data dosen',
+                ];
             }
 
             if (!$this->dosenModel->updateData($idDosen, $dataDosen)) {
-                throw new \Exception("update data dosen gagal");
+                return [
+                    'success' => false,
+                    'code'    => 500,
+                    'message' => 'Gagal menambahkan data dosen',
+                ];
             }
 
             $this->db->transCommit();
 
             return [
                 'success' => true,
+                'code'    => 200,
                 'message' => 'Data dosen berhasil diupdate',
             ];
         } catch (\Throwable $th) {
             $this->db->transRollback();
             return [
                 'success' => false,
+                'code'    => 500,
                 'message' => 'Terjadi kesalahan : ' . $th->getMessage(),
             ];
         }
@@ -152,25 +195,40 @@ class Dosen
 
     public function deleteDosen($id)
     {
-        $data = $this->userModel->findByID($id);
+        $existing = $this->dosenModel->findById($id);
+        if (!$existing) {
+            return [
+                'success' => false,
+                'code'    => 404,
+                'message' => 'Data dosen tidak ditemukan'
+            ];
+        }
+
+        $user = $this->userModel->findByID($existing->user_id);
 
         try {
-            if (!$this->userModel->deleteData($id)) {
-                throw new \Exception("hapus data dosen gagal");
+            if (!$this->userModel->deleteData($user->id)) {
+                return [
+                    'success' => false,
+                    'code'    => 500,
+                    'message' => 'Gagal hapus data dosen',
+                ];
             }
 
-            if (!empty($data->image) && $data->image !== 'default-profile.png') {
-                $imgPath = FCPATH . '/assets/img/dosen/' . $data->image;
+            if (!empty($user->image) && $user->image !== 'default-profile.png') {
+                $imgPath = FCPATH . '/assets/img/dosen/' . $user->image;
                 unlink($imgPath);
             }
 
             return [
                 'success' => true,
+                'code'    => 200,
                 'message' => 'Data dosen berhasil dihapus',
             ];
         } catch (\Throwable $th) {
             return [
                 'success' => false,
+                'code'    => 500,
                 'message' => 'Terjadi kesalahan : ' . $th->getMessage(),
             ];
         }

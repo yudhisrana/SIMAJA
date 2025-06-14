@@ -95,6 +95,7 @@
                                         <td>
                                             <button class="btn btn-warning btnEditDosen"
                                                 data-id="<?= $value->id; ?>"
+                                                data-user_id="<?= $value->userId ?>"
                                                 data-name="<?= htmlspecialchars(trim($value->name), ENT_QUOTES); ?>"
                                                 data-nidn="<?= htmlspecialchars(trim($value->nidn), ENT_QUOTES); ?>"
                                                 data-username="<?= htmlspecialchars(trim($value->username), ENT_QUOTES); ?>"
@@ -316,7 +317,7 @@
         // modal tambah
         $('.btnTambahDosen').click(function() {
             modeModal = 'tambah';
-            url = 'user/dosen/create-data';
+            url = baseUrl + 'user/dosen/create-data';
             method = 'POST';
 
             $('#modalDosenLabel').text('Tambah Data');
@@ -328,6 +329,7 @@
         // modal edit
         $('.btnEditDosen').click(function() {
             const id = $(this).data('id')
+            const userId = $(this).data('user_id');
             const name = $(this).data('name');
             const nidn = $(this).data('nidn');
             const username = $(this).data('username');
@@ -338,7 +340,7 @@
             const address = $(this).data('address');
             const isActive = $(this).data('is_active');
             modeModal = 'edit';
-            url = 'user/dosen/update-data/' + id;
+            url = baseUrl + 'user/dosen/update-data/' + id + '/' + userId;
             method = 'POST';
 
             $('#modalDosenLabel').text('Edit Data');
@@ -364,7 +366,7 @@
             const formData = new FormData(form);
 
             $.ajax({
-                url: baseUrl + url,
+                url: url,
                 method: method,
                 data: formData,
                 processData: false,
@@ -378,7 +380,10 @@
                         }).then(() => {
                             location.reload();
                         });
-                    } else {
+                    }
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
                         $('#name').removeClass('is-invalid');
                         $('#nidn').removeClass('is-invalid');
                         $('#username').removeClass('is-invalid');
@@ -389,19 +394,19 @@
                         $('#image').removeClass('is-invalid');
                         $('#name', '#nidn', '#username', '#password', '#email', '#phone', '#gender', '#image').text('').hide();
 
-                        for (const field in res.errors) {
-                            const errorMsg = res.errors[field];
+                        for (const field in xhr.responseJSON.errors) {
+                            const errorMsg = xhr.responseJSON.errors[field];
                             $('#' + field).addClass('is-invalid');
                             $('#' + field + '-error').text(errorMsg).show();
                         }
+                    } else {
+                        const errMsg = xhr.responseJSON.message
+                        Swal.fire({
+                            title: 'Opsss..',
+                            text: errMsg,
+                            icon: "error"
+                        })
                     }
-                },
-                error: function(err) {
-                    Swal.fire({
-                        title: 'Opsss..',
-                        text: err.responseJSON?.message,
-                        icon: "error"
-                    })
                 }
             })
         });
@@ -438,18 +443,13 @@
                                 }).then(() => {
                                     location.reload();
                                 })
-                            } else {
-                                Swal.fire({
-                                    title: 'Opsss..',
-                                    text: 'Gagal menghapus data tahunajaran',
-                                    icon: "error"
-                                })
                             }
                         },
-                        error: function() {
+                        error: function(xhr) {
+                            const errMsg = xhr.responseJSON.message
                             Swal.fire({
                                 title: 'Opsss..',
-                                text: 'Terjadi kesalahan server, silahkan coba lagi!',
+                                text: errMsg,
                                 icon: "error"
                             })
                         }
