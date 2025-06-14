@@ -23,6 +23,4 @@ class Dosen extends Entity
         'createdAt' => 'created_at',
         'updatedAt' => 'updated_at',
     ];
-    protected $dates   = ['created_at', 'updated_at'];
-    protected $casts   = [];
 }
