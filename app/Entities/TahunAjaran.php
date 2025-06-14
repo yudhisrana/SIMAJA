@@ -11,6 +11,6 @@ class TahunAjaran extends Entity
         'tahun' => null,
     ];
     protected $datamap = [];
-    protected $dates   = ['created_at', 'updated_at', 'deleted_at'];
+    protected $dates   = ['created_at', 'updated_at'];
     protected $casts   = [];
 }
